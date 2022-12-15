@@ -32,7 +32,7 @@
                     </div>
                     <img
                       v-bind:src="
-                        baseurl + '/uploads/pengumuman/' + newPengumuman.gambar
+                        baseurl + 'uploads/pengumuman/' + newPengumuman.gambar
                       "
                       class="card-img-top"
                       alt="..."
@@ -68,7 +68,7 @@
                       <h5 class="card-title">{{ p.judul }}</h5>
                     </div>
                     <img
-                      v-bind:src="baseurl + '/uploads/pengumuman/' + p.gambar"
+                      v-bind:src="baseurl + 'uploads/pengumuman/' + p.gambar"
                       class="card-img-top"
                       alt="..."
                     />
@@ -131,7 +131,7 @@
           <div class="modal-body">
             <div>
               <img
-                v-bind:src="baseurl + '/uploads/pengumuman/' + viewModal.gambar"
+                v-bind:src="baseurl + 'uploads/pengumuman/' + viewModal.gambar"
                 class="card-img-top"
                 alt="..."
               />
@@ -211,7 +211,7 @@
               <div>
                 <img
                   v-bind:src="
-                    baseurl + '/uploads/pengumuman/' + viewModal.gambar
+                    baseurl + 'uploads/pengumuman/' + viewModal.gambar
                   "
                   class="card-img-top"
                   alt="..."
@@ -288,7 +288,7 @@ export default {
       isi: yup.string().required("Isi pengumuman harus diisi"),
     });
     return {
-      baseurl: "http://localhost:8080",
+      baseurl: process.env.VUE_APP_SERVICE_URL,
       pengumuman: [],
       viewModal: [],
       detail: [],
