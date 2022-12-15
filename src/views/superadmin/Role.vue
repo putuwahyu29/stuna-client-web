@@ -1,0 +1,385 @@
+<template>
+  <div class="py-4 container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card min-vh-75">
+          <div class="card-header pb-0">
+            <div class="d-flex align-items-center">
+              <p class="mb-0">Daftar Peran</p>
+              <button
+                class="btn btn-success ms-auto btn-sm mb-0"
+                data-bs-toggle="modal"
+                data-bs-target="#addModal"
+              >
+                Tambah Peran
+              </button>
+            </div>
+          </div>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0" id="tes">
+                <thead>
+                  <tr>
+                    <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 align-middle text-center"
+                    >
+                      No.
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 align-middle text-center"
+                    >
+                      Nama Peran
+                    </th>
+                    <th
+                      class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 align-middle text-center"
+                    >
+                      Aksi
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(r, index) in role" :key="index">
+                    <td class="align-middle text-center">
+                      <p class="text-xs font-weight-bold mb-0">
+                        {{ index + 1 }}
+                      </p>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-xs font-weight-bold mb-0">{{
+                        r.name
+                      }}</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-xs font-weight-bold mb-0">
+                        <ul class="list-unstyled">
+                          <li>
+                            <button
+                              class="btn btn-sm btn-primary"
+                              data-bs-toggle="modal"
+                              data-bs-target="#viewModal"
+                              @click.prevent="view(r.id)"
+                            >
+                              <i class="fa-solid fa-eye"></i>
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="btn btn-sm btn-warning"
+                              data-bs-toggle="modal"
+                              data-bs-target="#editModal"
+                              @click.prevent="view(r.id)"
+                            >
+                              <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              class="btn btn-sm btn-danger"
+                              @click="destroy(r.id, index)"
+                            >
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </li>
+                        </ul>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Modal -->
+    <div
+      class="modal fade"
+      id="viewModal"
+      tabindex="-1"
+      aria-labelledby="viewModal"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Lihat Peran</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <label for="example-text-input" class="form-control-label"
+                >Nama</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                name="judul"
+                v-model="viewModal.name"
+                disabled
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModal"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <Form @submit="update(viewModal.id)" :validation-schema="schema">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Edit Peran
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label for="example-text-input" class="form-control-label"
+                  >Nama</label
+                >
+                <Field
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  v-model="viewModal.name"
+                />
+                <ErrorMessage name="name" class="error-feedback" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button data-bs-dismiss="modal" class="btn btn-success">
+                Simpan
+              </button>
+            </div>
+          </div>
+        </Form>
+      </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div
+      class="modal fade"
+      id="addModal"
+      tabindex="-1"
+      aria-labelledby="addModal"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <Form @submit="create()" :validation-schema="schema">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Tambah Peran
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label for="example-text-input" class="form-control-label"
+                  >Nama Peran</label
+                >
+                <Field
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  v-model="addPeran.name"
+                />
+                <ErrorMessage name="name" class="error-feedback" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Batal
+              </button>
+              <button data-bs-dismiss="modal" class="btn btn-success">
+                Tambah
+              </button>
+            </div>
+          </div>
+        </Form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import RoleService from "@/services/role.service";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
+export default {
+  name: "role",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
+  data() {
+    const schema = yup.object().shape({
+      name: yup.string().required("Nama peran harus diisi"),
+    });
+    return {
+      role: [],
+      viewModal: [],
+      addPeran: [],
+      schema,
+    };
+  },
+  computed: {
+    currentUser() {
+      return this.$store.state.auth.user
+    },
+  },
+  methods: {
+    destroy(id, index) {
+      this.$swal({
+        title: "Apakah yakin ingin menghapus data?",
+        text: "Data akan terhapus secara permanen!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Iya, Hapus",
+        cancelButtonText: "Batal",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$swal({
+            position: "top-end",
+            icon: "success",
+            title: "Data berhasil dihapus",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            RoleService.deleteRoleById(id).then(() => {
+              this.role.splice(index, 1);
+            });
+          });
+        }
+      });
+    },
+    viewAll() {
+      RoleService.getAllRoles().then(
+        (response) => {
+          this.role = response.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    view(id) {
+      RoleService.getRoleById(id).then(
+        (response) => {
+          this.viewModal = response.data;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    update(id) {
+      RoleService.updateRoleById(id, this.viewModal).then(
+        () => {
+          this.$swal({
+            position: "top-end",
+            icon: "success",
+            title: "Data berhasil diubah",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          this.viewAll();
+        },
+        (error) => {
+          this.$swal({
+            position: "top-end",
+            icon: "error",
+            title: "Input Gagal",
+            text: error.response.data.messages,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      );
+    },
+    create() {
+      RoleService.createRole({
+        name: this.addPeran.name,
+      }).then(
+        () => {
+          this.$swal({
+            position: "top-end",
+            icon: "success",
+            title: "Input sukses",
+            text: "Data berhasil ditambahkan!",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+          this.viewAll();
+        },
+        (error) => {
+          this.$swal({
+            position: "top-end",
+            icon: "error",
+            title: "Input Gagal",
+            text: error.response.data.messages,
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      );
+    },
+  },
+  mounted() {
+    this.viewAll();
+    if (!this.currentUser) {
+      this.$router.push("/login");
+    }
+  },
+};
+</script>
