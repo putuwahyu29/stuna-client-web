@@ -288,7 +288,7 @@ export default {
       isi: yup.string().required("Isi pengumuman harus diisi"),
     });
     return {
-      baseurl: process.env.VUE_APP_SERVICE_URL,
+      baseurl: process.env.VUE_APP_BASE_URL,
       pengumuman: [],
       viewModal: [],
       detail: [],
