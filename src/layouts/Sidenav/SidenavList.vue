@@ -204,7 +204,7 @@ export default {
     if (!this.currentUser) {
       this.$router.push("/signin");
     } else if (this.currentUser) {
-      this.role = this.currentUser.roles;
+      this.role = this.currentUser.user.roles;
     }
   },
 };
